@@ -79,7 +79,7 @@ async def assets(path):
 
 
 # Debug settings
-DEBUG = os.environ.get("DEBUG", "false")
+DEBUG = os.environ.get("DEBUG", "true")
 if DEBUG.lower() == "true":
     logging.basicConfig(level=logging.DEBUG)
 
