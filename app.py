@@ -238,7 +238,7 @@ def prepare_model_args(request_body, request_headers):
 
     user_json = None
     if (MS_DEFENDER_ENABLED):
-        print("in MS_DEFENDER_ENABLED Check +++++++")
+        logging.debug("in MS_DEFENDER_ENABLED Check +++++++")
         print(request_headers)
         authenticated_user_details = get_authenticated_user_details(request_headers)
         conversation_id = request_body.get("conversation_id", None)
@@ -339,7 +339,7 @@ async def promptflow_request(request):
 
 
 async def send_chat_request(request_body, request_headers):
-    print("in send_chatrequest +++++++")
+    logging.debug("in send_chatrequest +++++++")
     filtered_messages = []
     messages = request_body.get("messages", [])
     for message in messages:
@@ -363,7 +363,7 @@ async def send_chat_request(request_body, request_headers):
 
 
 async def complete_chat_request(request_body, request_headers):
-    print("complete_chat_request ============")
+    logging.debug("complete_chat_request ============")
     if app_settings.base_settings.use_promptflow:
         response = await promptflow_request(request_body)
         history_metadata = request_body.get("history_metadata", {})
@@ -380,7 +380,7 @@ async def complete_chat_request(request_body, request_headers):
 
 
 async def stream_chat_request(request_body, request_headers):
-    print("stream_chat_request ++++++++++")
+   logging.debug("stream_chat_request ++++++++++")
     response, apim_request_id = await send_chat_request(request_body, request_headers)
     history_metadata = request_body.get("history_metadata", {})
     
@@ -392,7 +392,7 @@ async def stream_chat_request(request_body, request_headers):
 
 
 async def conversation_internal(request_body, request_headers):
-    print("conversation_internal ++++++++++++++++")
+    logging.debug("conversation_internal ++++++++++++++++")
     try:
         if app_settings.azure_openai.stream and not app_settings.base_settings.use_promptflow:
             result = await stream_chat_request(request_body, request_headers)
@@ -414,7 +414,7 @@ async def conversation_internal(request_body, request_headers):
 
 @bp.route("/conversation", methods=["POST"])
 async def conversation():
-    print("/conversation methods +++++++++++++++++++++")
+    logging.debug("/conversation methods +++++++++++++++++++++")
     if not request.is_json:
         return jsonify({"error": "request must be json"}), 415
     request_json = await request.get_json()
